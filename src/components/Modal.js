@@ -1,16 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdClear } from "react-icons/md";
 import { Input, Text, Button } from '../elements/index';
-import {useDispatch } from 'react-redux';
+import { useSelector ,useDispatch } from 'react-redux';
 import { actionCreators as scheduleActions} from '../redux/modules/schedule';
 
-const Modal = (props) => {
+const Modal = React.memo((props) => {
   const dispatch = useDispatch();
-  const { visible, _closeModal } = props;
+  const { visible, _closeModal, modalType } = props;
   const [contents, setContents] = useState('');
-  const dateInfo = React.useRef();
+  const modal_scheduleInfo = useSelector(state => state.schedule.modal_scheduleInfo);
+  let dateInfo = React.useRef();
+
+  useEffect(() => {
+    setContents(modal_scheduleInfo.contents);
+    dateInfo.current.value = `${modal_scheduleInfo.date_info}T${modal_scheduleInfo.time_info}`;
+  }, [modal_scheduleInfo])
   
   const changeContent = (e) => {
     setContents(e.target.value);
@@ -18,6 +24,7 @@ const Modal = (props) => {
   
   const addSchedule = () => {
     const dateValue = dateInfo.current.value;
+
     if (contents === '') {
       window.alert('일정을 입력해주세요!');
       return
@@ -33,31 +40,73 @@ const Modal = (props) => {
       'contents': contents,
       'finished': false
     }
-    console.log(scheduleInfo);
     dispatch(scheduleActions.addScheduleFB(scheduleInfo));
   }
   return (
     <>
-    <ModalContainer visible={visible}>
-      <ModalOveraly>
-        <ModalInner>
-          <ContentsArea>
-            <ClearButton onClick={_closeModal}>
-              <MdClear />
-            </ClearButton>
+      <ModalContainer visible={visible}>
+        <ModalOveraly>
+          <ModalInner>
+            <ContentsArea>
+              <ClearButton onClick={_closeModal}>
+                <MdClear />
+              </ClearButton>
               <Text>일정 내용</Text>
-              <Input value={contents} _onChange={changeContent} multiline/>
-              <Text>일시</Text>
-              <input type="datetime-local" ref={dateInfo}/>
+              <Input
+                value={contents}
+                _onChange={changeContent}
+                placeholder='일정을 입력해주세요.'
+                multiline />
             </ContentsArea>
-            <Button text="취소" _onClick={_closeModal}/>
-            <Button text="등록" _onClick={addSchedule}/>
-        </ModalInner>
-      </ModalOveraly>
-    </ModalContainer>
+            <ContentsArea>
+              <Text>일시</Text>
+              <input type="datetime-local" ref={dateInfo} />
+            </ContentsArea>
+            <ContentsArea>
+              {modalType && modalType === 'add'
+                ?
+                (
+                  <ButtonArea>
+                    <Button
+                      width="35%"
+                      text="취소"
+                      color="#212121"
+                      bg="#fff"
+                      margin="0px 20px 0px 0px"
+                      _onClick={_closeModal}
+                    />
+                    <Button
+                      width="35%"
+                      text="등록"
+                      _onClick={addSchedule} />
+                  </ButtonArea>
+                )
+                :
+                (
+                  <ButtonArea>
+                    <Button
+                      width="35%"
+                      text="수정"
+                      bg="#212121"
+                      margin="0px 20px 0px 0px"
+                      _onClick={_closeModal}
+                    />
+                    <Button
+                      width="35%"
+                      text="삭제"
+                      bg="#c34d68"
+                      _onClick={addSchedule} />
+                  </ButtonArea>
+                )
+              }
+              
+            </ContentsArea>
+          </ModalInner>
+        </ModalOveraly>
+      </ModalContainer>
     </>
   )
-}
+});
 
 Modal.defaultProps = {
   visible: false,
@@ -97,7 +146,18 @@ const ModalInner = styled.div`
 `
 
 const ContentsArea = styled.div`
-  margin-top: 50px;
+  padding: 0 30px;
+  margin-top: 60px;
+  @media screen and (max-width: 496px){
+    margin-top: 45px;
+  }
+`
+
+const ButtonArea = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  
 `
 
 const ClearButton = styled.div`

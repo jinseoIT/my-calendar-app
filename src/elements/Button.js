@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = (props)=>{
-    const {text, _onClick, is_float, children, margin, width, padding} = props;
-
+const Button = React.memo((props)=>{
+  const {text, _onClick, is_float, children, margin, width, padding, bg, color} = props;
   const styles = {
     margin: margin,
     width: width,
-    padding: padding
+    padding: padding,
+    bg: bg,
+    color: color
   };
 
     if(is_float){
@@ -24,7 +25,7 @@ const Button = (props)=>{
         <ElButton {...styles} onClick={_onClick}>{text? text:children}</ElButton>
       </React.Fragment>
     );
-};
+});
 
 Button.defaultProps = {
     text: false,
@@ -34,17 +35,22 @@ Button.defaultProps = {
     margin:false,
     width:"100%",
     padding: "12px 0px",
+    bg: "#212121",
+    color: "#fff"
 };
 
-
+// #212121;
 const ElButton = styled.button`
     width: ${(props)=>props.width};
-    background-color: #212121;
-    color: #ffffff;
+    background-color: ${(props)=> props.bg};
+    color: ${(props)=> props.color};
     padding: ${(props)=> props.padding};
     box-sizing: border-box;
-    border: none;
-    ${(props)=>(props.margin? `margin: ${props.margin};`:"")}
+    border-radius: 6px;
+    border: 1px solid #212121;
+    font-weight: bold;
+    ${(props) => (props.margin ? `margin: ${props.margin};` : "")}
+    cursor:pointer;
 `;
 
 const FloatButton = styled.button`

@@ -5,23 +5,40 @@ import Calendar from '../components/Calendar'
 import Modal from '../components/Modal'
 
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { actionCreators as scheduleActions} from '../redux/modules/schedule';
 
 const Main = () => {
-  
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [modalType, setModalType] = useState('add');
+
+  const openModal = (type) => {
+    /* 일정추가 modal*/
+    if (type === 'add') {
+      dispatch(scheduleActions.readSchedule({}));
+    }
+    setModalType(type);
+    setVisible(true);
+  }
+
   return (
     <Container>
       <CalendarArea>
         {/* 캘린더 */}
-        <Calendar />
+        <Calendar
+          _openModal={() => openModal('modify')}
+          _setModify={() => setModalType('modify')}
+        />
       </CalendarArea>
-      <AddButton onClick={() => setVisible(true)}>
+      <AddButton onClick={() => openModal('add')}>
         <IconArea>
           <IoIosAdd />
         </IconArea>
       </AddButton>
       <Modal
         visible={visible}
+        modalType={modalType}
         _closeModal={() => setVisible(false)} />
     </Container>
   )
@@ -40,7 +57,7 @@ const CalendarArea = styled.div`
   position: relative;
 `
 const AddButton = styled.div`
-  background-color: royalblue;
+  background-color: #3788d9;
   position: fixed;
   height: 65px;
   width: 65px;
@@ -54,8 +71,9 @@ const IconArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #000;
+  color: #fff;
   font-size: 40px;
+  cursor: pointer;
 ` 
 
 export default Main

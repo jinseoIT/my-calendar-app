@@ -6,18 +6,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionCreators as scheduleActions} from '../redux/modules/schedule';
 
 
-const Calendar = () => {
+const Calendar = (props) => {
   const dispatch = useDispatch();
-  const schedule_list = useSelector(state => state.schedule.list);
-  console.log(schedule_list);
-
+  const { _openModal, _setModify } = props;
+  let schedule_list = useSelector(state => state.schedule.list);
   React.useEffect(() => {
-    dispatch(scheduleActions.getScheduleFB());
+    if (schedule_list == 0) {
+      dispatch(scheduleActions.getScheduleFB());  
+    }
   }, []);
 
-  const test = (e) => {
-    console.log('click');
-    console.log(e.event._def);
+  const updateModal = (e) => {
+    const scheduleObj = e.event._def.extendedProps;
+    dispatch(scheduleActions.readSchedule(scheduleObj));
+    _setModify();
+    _openModal();
   }
   return (
     <Container>
@@ -34,7 +37,7 @@ const Calendar = () => {
         }}
         dayMaxEvents= "true"
         events={schedule_list}
-        eventClick={test}
+        eventClick={updateModal}
       />
     </Container>
   )
@@ -43,7 +46,9 @@ const Calendar = () => {
 const Container = styled.div`
   height: 90%;
   width : 90%;
-  
+    a {
+      cursor: pointer;
+    }
   .fc-col-header-cell {
     background-color: #757984;
     color: #fff;

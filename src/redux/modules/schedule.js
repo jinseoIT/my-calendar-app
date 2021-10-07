@@ -4,12 +4,16 @@ import { firestore } from '../../config/firebase';
 
 const SET_SCHEDULE = 'SET_SCHEDULE';
 const ADD_SCHEDULE = 'ADD_SCHEDULE';
+const READ_SCHEDULE = 'READ_SCHEDULE';
 
 const setSchedule = createAction(SET_SCHEDULE, (schedule_list) => ({ schedule_list }));
 const addSchedule = createAction(ADD_SCHEDULE, (schedule) => ({ schedule }));
+const readSchedule = createAction(READ_SCHEDULE, (scheduleInfo) => ({ scheduleInfo }));
 
 const initailState = {
-  list : []
+  list : [],
+  finishedList: [],
+  modal_scheduleInfo: {}
 }
 
 const getScheduleFB = () => {
@@ -20,7 +24,8 @@ const getScheduleFB = () => {
     await scheduleDB.get()
       .then(docs => {
         docs.forEach((doc) => {
-          scheduleList.push({ ...doc.data() });
+          const obj = doc.data();
+          scheduleList.push({ 'doc_id': doc.id, 'date_info': obj.date , ...obj });
         })
       })
     dispatch(setSchedule(scheduleList));
@@ -48,19 +53,29 @@ export default handleActions(
     [SET_SCHEDULE]: (state, action) => produce(state, (draft) => {
       const dbList = action.payload.schedule_list;
       const newList = dbList.map(v => {
-        return { ...v, 'title': `${v.time_info} ${v.contents}` };
+        const obj = { ...v, 'title': `${v.time_info} ${v.contents}` }
+        if (v.finished) {
+          obj['color'] = '#757984';
+        }
+        return obj;
       })
       draft.list.push(...newList);
     }),
     [ADD_SCHEDULE]: (state, action) => produce(state, (draft) => {
       const scheduleInfo = action.payload.schedule;
       draft.list.push({ ...scheduleInfo, 'title': `${scheduleInfo.time_info} ${scheduleInfo.contents}`});
-    })
+    }),
+    [READ_SCHEDULE]: (state, action) => produce(state, (draft) => {
+      const scheduleInfo = action.payload.scheduleInfo;
+      draft.modal_scheduleInfo = {...scheduleInfo}
+      
+    }) 
   }, initailState
 )
 
 const actionCreators = {
   addSchedule,
+  readSchedule,
   getScheduleFB,
   addScheduleFB
 }

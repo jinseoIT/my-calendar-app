@@ -9,7 +9,7 @@ const Input = (props) => {
   if(multiline){
     return(
         <>
-          {label && <Text margin="0px">{label}</Text>}
+          {label && <Text margin="0px" bold={true}>{label}</Text>}
           <ElTextarea value={value} rows={5} placeholder={placeholder} onChange={_onChange}></ElTextarea>
         </>
     );
@@ -17,7 +17,7 @@ const Input = (props) => {
   
   return (
     <>
-      {label && <Text margin="0px">{label}</Text>}
+      {label && <Text margin="0px" bold>{label}</Text>}
       <ElInput type={type} placeholder={placeholder} onChange={_onChange}/>
     </>
   )
@@ -40,11 +40,12 @@ Input.defaultProps = {
   `;
   
   const ElTextarea = styled.textarea`
-   border: 1px solid #212121;
-      width: 100%;
-      padding: 12px 4px;
-      box-sizing: border-box;
-      resize: none;
+    border: 1px solid #212121;
+    border-radius: 6px;
+    width: 100%;
+    padding: 12px 4px;
+    box-sizing: border-box;
+    resize: none;
   `;
 
 export default Input

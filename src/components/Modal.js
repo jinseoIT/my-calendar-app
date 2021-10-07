@@ -3,22 +3,38 @@ import styled from 'styled-components'
 import { useState } from 'react';
 import { MdClear } from "react-icons/md";
 import { Input, Text, Button } from '../elements/index';
-import moment from 'moment';
+import {useDispatch } from 'react-redux';
+import { actionCreators as scheduleActions} from '../redux/modules/schedule';
 
 const Modal = (props) => {
+  const dispatch = useDispatch();
   const { visible, _closeModal } = props;
-  const [content, setContent] = useState('');
+  const [contents, setContents] = useState('');
   const dateInfo = React.useRef();
   
   const changeContent = (e) => {
-    setContent(e.target.value);
+    setContents(e.target.value);
   }
   
   const addSchedule = () => {
     const dateValue = dateInfo.current.value;
-    const formatDate = moment(dateValue).format('yyyy-MM-dd HH:mm');
-    console.log('날짜 정보', dateValue);
-    console.log('날짜 포멧', formatDate)
+    if (contents === '') {
+      window.alert('일정을 입력해주세요!');
+      return
+    }
+    if (dateValue === '') {
+      window.alert('일시를 지정해주세요!');
+      return
+    }
+    const dateArr = dateValue.split('T');
+    const scheduleInfo = {
+      'date': dateArr[0],
+      'time_info': dateArr[1],
+      'contents': contents,
+      'finished': false
+    }
+    console.log(scheduleInfo);
+    dispatch(scheduleActions.addScheduleFB(scheduleInfo));
   }
   return (
     <>
@@ -30,7 +46,7 @@ const Modal = (props) => {
               <MdClear />
             </ClearButton>
               <Text>일정 내용</Text>
-              <Input value={content} _onChange={changeContent} multiline/>
+              <Input value={contents} _onChange={changeContent} multiline/>
               <Text>일시</Text>
               <input type="datetime-local" ref={dateInfo}/>
             </ContentsArea>

@@ -2,10 +2,19 @@ import React from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreators as scheduleActions} from '../redux/modules/schedule';
+
 
 const Calendar = () => {
-  
-  
+  const dispatch = useDispatch();
+  const schedule_list = useSelector(state => state.schedule.list);
+  console.log(schedule_list);
+
+  React.useEffect(() => {
+    dispatch(scheduleActions.getScheduleFB());
+  }, []);
+
   const test = (e) => {
     console.log('click');
     console.log(e.event._def);
@@ -24,12 +33,7 @@ const Calendar = () => {
           right: 'prev,next',
         }}
         dayMaxEvents= "true"
-        events={[
-          { title: '01:00 밥먹기', date: '2021-10-02', color:'#378006', textColor : '#fff'},
-          { title: '02:00 밥먹기', date: '2021-10-03', color:'#378006', textColor : '#fff'},
-          { title: '03:00 밥먹기', date: '2021-10-04', color:'#378006', textColor : '#fff'},
-          { title: '08:00 밥먹기', date: '2021-10-09', color:'#378006', textColor : '#fff'},
-        ]}
+        events={schedule_list}
         eventClick={test}
       />
     </Container>

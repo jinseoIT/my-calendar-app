@@ -46,7 +46,7 @@ const Main = () => {
       </AddButton>
       <SelectButtonArea>
         <Button
-          text={allScheduleYn ? '완료 일정 보기' : '미완료   일정 보기'}
+          text={allScheduleYn ? '완료 일정 보기' : '전체 일정 보기'}
           width="90px"
           padding="8px"
           color="#212121"

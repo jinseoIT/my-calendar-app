@@ -6,12 +6,14 @@ import Modal from '../components/Modal'
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { actionCreators as scheduleActions} from '../redux/modules/schedule';
+import { actionCreators as scheduleActions } from '../redux/modules/schedule';
+import { Button } from '../elements/index';
 
 const Main = () => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [modalType, setModalType] = useState('add');
+  const [allScheduleYn, setAllScheduleYn] = useState(true);
 
   const openModal = (type) => {
     /* 일정추가 modal*/
@@ -22,6 +24,11 @@ const Main = () => {
     setVisible(true);
   }
 
+  const changeScheduleType = () => {
+    const scheduleYn = allScheduleYn ? false : true
+    setAllScheduleYn(scheduleYn);
+  }
+
   return (
     <Container>
       <CalendarArea>
@@ -29,6 +36,7 @@ const Main = () => {
         <Calendar
           _openModal={() => openModal('modify')}
           _setModify={() => setModalType('modify')}
+          allScheduleYn={allScheduleYn}
         />
       </CalendarArea>
       <AddButton onClick={() => openModal('add')}>
@@ -36,6 +44,16 @@ const Main = () => {
           <IoIosAdd />
         </IconArea>
       </AddButton>
+      <SelectButtonArea>
+        <Button
+          text={allScheduleYn ? '완료 일정 보기' : '미완료   일정 보기'}
+          width="90px"
+          padding="8px"
+          color="#212121"
+          bg="#fff"
+          _onClick={changeScheduleType}
+        />
+      </SelectButtonArea>
       <Modal
         visible={visible}
         modalType={modalType}
@@ -62,7 +80,7 @@ const AddButton = styled.div`
   height: 65px;
   width: 65px;
   border-radius: 50%;
-  bottom: 10px;
+  bottom: 15px;
   right : 10px;
   z-index: 2;
 `
@@ -74,6 +92,15 @@ const IconArea = styled.div`
   color: #fff;
   font-size: 40px;
   cursor: pointer;
-` 
+`
+
+const SelectButtonArea = styled.div`
+  height: 65px;
+  width: 85px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+`
 
 export default Main

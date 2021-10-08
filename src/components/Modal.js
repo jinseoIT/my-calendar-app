@@ -22,7 +22,7 @@ const Modal = React.memo((props) => {
     setContents(e.target.value);
   }
   
-  const addSchedule = () => {
+  const addSchedule = (type) => {
     const dateValue = dateInfo.current.value;
 
     if (contents === '') {
@@ -40,14 +40,41 @@ const Modal = React.memo((props) => {
       'contents': contents,
       'finished': false
     }
-    dispatch(scheduleActions.addScheduleFB(scheduleInfo));
+    if (type === 'add') {
+      dispatch(scheduleActions.addScheduleFB(scheduleInfo)); 
+    } else {
+      dispatch(scheduleActions.updateScheduleFB(scheduleInfo, modal_scheduleInfo.doc_id)) 
+    }
+    _closeModal();
   }
+
+  const deleteSchedule = () => {
+    const deleteYn = window.confirm('정말로 삭제하시겠습니까?');
+    if (deleteYn) {
+      dispatch(scheduleActions.deleteScheduleFB(modal_scheduleInfo.doc_id))
+    }
+    _closeModal();
+  }
+
+  const scheduleConfirm = () => {
+    let toggleYn = modal_scheduleInfo.finished ? false : true
+    dispatch(scheduleActions.updateConfirmFB(modal_scheduleInfo.doc_id, toggleYn));
+  }
+  
   return (
     <>
       <ModalContainer visible={visible}>
         <ModalOveraly>
           <ModalInner>
             <ContentsArea>
+              <ScheduleConfirmBtn>
+                <Button
+                  width="35%"
+                  text={modal_scheduleInfo.finished? '완료': '미완료'}
+                  bg={modal_scheduleInfo.finished? '#757984': '#3788d9'}
+                  _onClick={() => scheduleConfirm()}
+                />
+              </ScheduleConfirmBtn>
               <ClearButton onClick={_closeModal}>
                 <MdClear />
               </ClearButton>
@@ -60,7 +87,7 @@ const Modal = React.memo((props) => {
             </ContentsArea>
             <ContentsArea>
               <Text>일시</Text>
-              <input type="datetime-local" ref={dateInfo} />
+              <input type="datetime-local" ref={dateInfo} style={{padding:'6px'}}/>
             </ContentsArea>
             <ContentsArea>
               {modalType && modalType === 'add'
@@ -78,7 +105,7 @@ const Modal = React.memo((props) => {
                     <Button
                       width="35%"
                       text="등록"
-                      _onClick={addSchedule} />
+                      _onClick={() => addSchedule('add')} />
                   </ButtonArea>
                 )
                 :
@@ -89,13 +116,13 @@ const Modal = React.memo((props) => {
                       text="수정"
                       bg="#212121"
                       margin="0px 20px 0px 0px"
-                      _onClick={_closeModal}
+                      _onClick={() => addSchedule('modify')}
                     />
                     <Button
                       width="35%"
                       text="삭제"
                       bg="#c34d68"
-                      _onClick={addSchedule} />
+                      _onClick={() => deleteSchedule()} />
                   </ButtonArea>
                 )
               }
@@ -149,7 +176,7 @@ const ContentsArea = styled.div`
   padding: 0 30px;
   margin-top: 60px;
   @media screen and (max-width: 496px){
-    margin-top: 45px;
+    margin-top: 30px;
   }
 `
 
@@ -168,6 +195,13 @@ const ClearButton = styled.div`
   right: 5px;
   top: 5px;
   cursor: pointer;
+`
+
+const ScheduleConfirmBtn = styled.div`
+  position: absolute;
+  width: 200px;
+  cursor: pointer;
+  top: 10px;
 `
 
 

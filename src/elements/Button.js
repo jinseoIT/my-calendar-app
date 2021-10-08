@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = React.memo((props)=>{
-  const {text, _onClick, is_float, children, margin, width, padding, bg, color} = props;
+  const {text, _onClick, is_float, children, margin, width, height, padding, bg, color} = props;
   const styles = {
     margin: margin,
     width: width,
+    height : height,
     padding: padding,
     bg: bg,
     color: color
@@ -39,9 +40,9 @@ Button.defaultProps = {
     color: "#fff"
 };
 
-// #212121;
 const ElButton = styled.button`
-    width: ${(props)=>props.width};
+    width: ${(props) => props.width};
+    height: ${(props) => props.height}; 
     background-color: ${(props)=> props.bg};
     color: ${(props)=> props.color};
     padding: ${(props)=> props.padding};

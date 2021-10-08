@@ -3,18 +3,23 @@ import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { actionCreators as scheduleActions} from '../redux/modules/schedule';
+import { actionCreators as scheduleActions } from '../redux/modules/schedule';
 
 
 const Calendar = (props) => {
   const dispatch = useDispatch();
-  const { _openModal, _setModify } = props;
+  const { _openModal, _setModify, allScheduleYn } = props;
   let schedule_list = useSelector(state => state.schedule.list);
+  if (!allScheduleYn) {
+    schedule_list = schedule_list.filter(v=> v.finished === true)
+  }
   React.useEffect(() => {
-    if (schedule_list == 0) {
+    if (schedule_list.length === 0) {
       dispatch(scheduleActions.getScheduleFB());  
     }
-  }, []);
+  }, [schedule_list, allScheduleYn]);
+
+  //refetchEvents()
 
   const updateModal = (e) => {
     const scheduleObj = e.event._def.extendedProps;

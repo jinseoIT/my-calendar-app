@@ -7,7 +7,7 @@
 - 대표 사용기술 및 라이브러리 : React, Redux, styled-components firebase, fullCalendar, react-icons, redux-actions, immer
 
 ## 🔍 Link
-캘린더 바로가기 https://my-dictionary-5f4fc.web.app/
+캘린더 바로가기 https://my-calendar-37f77.web.app/
 
 ## 📚요구사항
 - [x] 이전 월로 이동 / 다음 월로 이동

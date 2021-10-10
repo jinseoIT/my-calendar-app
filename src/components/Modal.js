@@ -67,14 +67,19 @@ const Modal = React.memo((props) => {
         <ModalOveraly>
           <ModalInner>
             <ContentsArea>
-              <ScheduleConfirmBtn>
-                <Button
-                  width="35%"
-                  text={modal_scheduleInfo.finished? '완료': '미완료'}
-                  bg={modal_scheduleInfo.finished? '#757984': '#3788d9'}
-                  _onClick={() => scheduleConfirm()}
-                />
-              </ScheduleConfirmBtn>
+              {modalType && modalType === 'modify'
+                ? (
+                  <ScheduleConfirmBtn>
+                  <Button
+                    width="35%"
+                    text={modal_scheduleInfo.finished? '완료': '미완료'}
+                    bg={modal_scheduleInfo.finished? '#757984': '#3788d9'}
+                    _onClick={() => scheduleConfirm()}
+                  />
+                </ScheduleConfirmBtn>  
+                )
+                : ''
+              }
               <ClearButton onClick={_closeModal}>
                 <MdClear />
               </ClearButton>

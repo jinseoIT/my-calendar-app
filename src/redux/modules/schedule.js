@@ -44,7 +44,7 @@ const addScheduleFB = (scheduleInfo) => {
     await ScheduleDB
       .add({ ...scheduleInfo})
       .then(doc => {
-        let schedule = { ...scheduleInfo, id: doc.id };
+        let schedule = { ...scheduleInfo, 'doc_id': doc.id };
         dispatch(addSchedule(schedule))
       })
       .catch(err => {
@@ -135,7 +135,7 @@ export default handleActions(
     /* 스케줄 상세 */
     [READ_SCHEDULE]: (state, action) => produce(state, (draft) => {
       const scheduleInfo = action.payload.scheduleInfo;
-      draft.modal_scheduleInfo = {...scheduleInfo}
+      draft.modal_scheduleInfo = { ...scheduleInfo }
     }),
     /* 일정 완료 | 미완료 */
     [UPDATE_CONFIRM]: (state, action) => produce(state, (draft) => {

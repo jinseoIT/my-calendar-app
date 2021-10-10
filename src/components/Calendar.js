@@ -10,6 +10,7 @@ const Calendar = (props) => {
   const dispatch = useDispatch();
   const { _openModal, _setModify, allScheduleYn } = props;
   let schedule_list = useSelector(state => state.schedule.list);
+  /* 완료 일정 보기 */
   if (!allScheduleYn) {
     schedule_list = schedule_list.filter(v=> v.finished === true)
   }

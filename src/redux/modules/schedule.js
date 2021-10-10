@@ -19,7 +19,6 @@ const updateConfirm = createAction(UPDATE_CONFIRM, (doc_id, toggleYn) => ({ doc_
 
 const initailState = {
   list : [],
-  finishedList: [],
   modal_scheduleInfo: {}
 }
 
